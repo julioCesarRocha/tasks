@@ -1,0 +1,12 @@
+{% for task in tasks %}
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+    <p>Completed: {{ task.completed }}</p>
+    <p>Created at: {{ task.created_at }}</p>
+    <p>Updated at: {{ task.updated_at }}</p>
+    <hr>
+{% empty %}
+    <p>Tarefa não encontrada.</p>
+{% endfor %}
+
+<a href="{% url 'tasks:task_create' %}">Criar Tarefa</a>

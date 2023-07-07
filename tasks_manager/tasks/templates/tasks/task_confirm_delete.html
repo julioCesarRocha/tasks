@@ -1,0 +1,5 @@
+<p>Tem certeza que deseja exluir "{{ task.title }}"?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Deletar</button>
+</form>
