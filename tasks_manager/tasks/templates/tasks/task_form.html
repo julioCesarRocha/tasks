@@ -1,5 +1,7 @@
-<form method="POST">
+{% load bootstrap4 %}
+
+<form method="POST" class="bootstrap-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar</button>
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
