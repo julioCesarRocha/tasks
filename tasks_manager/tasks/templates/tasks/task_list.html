@@ -1,24 +1,67 @@
 {% load bootstrap4 %}
+{% load tz %}
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Task List</title>
+    <title>Lista de Tarefas</title>
     {% bootstrap_css %}
+    <style>
+        .card {
+            border-radius: 5px;
+        }
+        
+        .card-description {
+            max-height: 150px;
+            overflow: hidden;
+        }
+    </style>
 </head>
-<body>
-    {% for task in tasks %}
-        <h2>{{ task.titulo }}</h2>
-        <p>{{ task.descricao }}</p>
-        <p>Responsável: {{ task.responsavel }}</p>
-        <p>Criada Em: {{ task.criado_em }}</p>
-        <hr>
-    {% empty %}
-        <p>Nenhuma Tarefa Cadastrada.</p>
-    {% endfor %}
+<body class="p-4">
+    <div class="row mb-4">
+        {% for task in tasks %}
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ task.titulo }}</h3>
+                        <p class="card-text card-description">{{ task.descricao }}</p>
+                        <p class="card-text">{{ task.criado_em|date:"d/m/Y H:i:s" }}</p>
+                        <a href="{% url 'tasks:task_update' pk=task.pk %}" class="btn btn-primary mb-4">Editar</a>
+                        <a href="{% url 'tasks:task_delete' pk=task.pk %}" class="btn btn-danger btn-delete mb-4">Excluir</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Nenhuma Tarefa Cadastrada.</p>
+        {% endfor %}  
+    </div>
 
-    <a href="{% url 'tasks:task_create' %}" class="btn btn-primary">Criar Tarefa</a>
-
+    <a href="{% url 'tasks:task_create' %}" class="btn btn-success mb-4">Nova Tarefa</a>
     {% bootstrap_javascript %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.btn-delete').on('click', function(e) {
+                    e.preventDefault();
+                    var deleteUrl = $(this).attr('href');
+                    
+                    if (confirm("Tem certeza de que deseja excluir esta tarefa?")) {
+                    $.ajax({
+                        
+                        url: deleteUrl,
+                        method: 'POST',
+                        data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function() {
+                        location.reload();
+                        },
+                        error: function() {
+                        }
+                    });
+                    }
+                });
+            });
+        </script>
 </body>
 </html>
